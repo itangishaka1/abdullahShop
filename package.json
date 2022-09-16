@@ -1,0 +1,25 @@
+{
+  "name": "abdullahshop",
+  "version": "1.0.0",
+  "description": "MERN shoping cart app",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itangishaka1/abdullahShop.git"
+  },
+  "author": "Abdullah Itangishaka",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itangishaka1/abdullahShop/issues"
+  },
+  "homepage": "https://github.com/itangishaka1/abdullahShop#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
