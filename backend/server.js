@@ -1,7 +1,10 @@
-const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
-const products = require('./data/products')
+import express from 'express'
+import cors from 'cors'
+import * as dotenv from 'dotenv'
+dotenv.config()
+// require('dotenv').config()  // was for commonJS syntax
+
+import products from './data/products.js' // when we use import (ES6, we have to add .js extension)
 
 const app = express()
 const PORT = process.env.PORT || 5200
