@@ -7,7 +7,7 @@
 
 (4) Go again to https://www.mongodb.com/products/compass   and install the compass
 
-(5) To connect to our DB we use : https://mongoosejs.com/
+(5) To connect to our DB we use
 
 
 */
