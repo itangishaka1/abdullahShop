@@ -14,6 +14,10 @@ const Home = () => {
 
     fetchProducts()
   }, [])
+
+  if(!products) {
+    return <p>Loading...</p>
+  }
   return (
     <>
       <h1>Latest Products</h1>
