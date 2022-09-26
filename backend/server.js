@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
 import connectDB from './config/db.js'
+import colors from 'colors'
 dotenv.config()
 // require('dotenv').config()  // was for commonJS syntax
 
@@ -28,4 +29,4 @@ app.get('/api/products/:id', (req, res) => {
 })
 
 
-app.listen(PORT, console.log(`AbdullahShop server running in ${process.env.NODE_ENV} mode on port:${PORT}`))
+app.listen(PORT, console.log(`AbdullahShop server running in ${process.env.NODE_ENV} mode on port:${PORT}`.yellow.bold))
