@@ -1,8 +1,11 @@
 const express = require('express')
-const products = require('./data/products')
 const cors = require('cors')
+require('dotenv').config()
+const products = require('./data/products')
 
 const app = express()
+const PORT = process.env.PORT || 5200
+
 app.use(cors())
 
 app.get('/', (req, res) => {
@@ -19,4 +22,4 @@ app.get('/api/products/:id', (req, res) => {
 })
 
 
-app.listen(5100, console.log('abdullahShop server is listening on port 5100'))
+app.listen(PORT, console.log(`AbdullahShop server running in ${process.env.NODE_ENV} mode on port:${PORT}`))
