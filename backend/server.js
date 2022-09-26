@@ -1,10 +1,13 @@
 import express from 'express'
 import cors from 'cors'
 import * as dotenv from 'dotenv'
+import connectDB from './config/db.js'
 dotenv.config()
 // require('dotenv').config()  // was for commonJS syntax
 
 import products from './data/products.js' // when we use import (ES6, we have to add .js extension)
+
+connectDB()
 
 const app = express()
 const PORT = process.env.PORT || 5200
