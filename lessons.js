@@ -44,6 +44,12 @@ then display it. We have to create an action or action creator to dispatch a spe
 
 ! Attention:
 Redux is not specifically attached to react. You can use redux on its own. You can use it with other frameworks too. We gonna use a package called "react-redux" that connects the 2 together.
+
+? A pattern will be:
+    a) create the constant
+    b) reducer
+    c) action
+    d) fire off in the component
                             --------------------------------------
 
 / (1) Create a Redux store
@@ -103,3 +109,158 @@ root.render(
     <App />
   </Provider>
 );
+
+/*
+------------------------------------------
+/ (2) Product List Reducer and Action
+
+Create /src/reducers
+
+Each resource of our app will have a reducer file such as products.
+
+? create /src/reducers/productReducers.js
+We gonna have #nt reducer functions in here which will all be related to products
+*/
+
+/*   src/reducers/productReducers.js 
+To handle the state for the product list which we see on the homepage.
+
+? Reducer takes in 2 things:
+    a) initial state 
+    b) action
+
+When we create an action reducer, we gonna dispatch an action to this reducer (i.e productListReducer)
+"action" will be an object that has a "type".
+And the type may also contain the payload.
+So if we are getting the data , the payload will have the data that we fetched from the server.
+
+We want to evaluate the type that is in the action object, so we use a switch for that.
+
+In all our cases, we return a piece of the state.
+We gonna set a loading: true,  because when we make the request, we want the component to know that it's currently fetching( so it's currently loading)
+
+If we get a success request,  we will send the data in the payload,
+if not we will send the error in the payload.
+
+We will always have the default which will be the initial state. 
+*/
+
+export const productListReducer = (state = { products: [] }, action) => {
+  switch(action.type) {
+      case 'PRODUCT_LIST_REQUEST':
+          return { loading: true, products: [] }
+      case 'PRODUCT_LIST_SUCCESS':
+          return { loading:false, products: action.payload }
+      case 'PRODUCT_LIST_FAIL':
+          return { loading:false, error: action.payload}
+      default:
+          return state            
+  }
+}
+
+/*
+In order to use this reducer, we have to add it to our store.
+*/
+// store.js 
+import { productListReducer } from './reducers/productReducers'
+
+const reducer = combineReducers({
+  // This is important because 'productList' is what is gonna show as a piece of the state.
+  productList: productListReducer,
+})
+
+const initialState = {}
+
+const middleware = [ thunk ]
+
+const store = createStore(reducer, initialState, composeWithDevTools(applyMiddleware(...middleware)))
+
+export default store
+
+/*
+        ----- CONSTANTS ------
+
+Typically, we will puth these string ('PRODUCT_LIST_REQUEST', 'PRODUCT_LIST_SUCCESS', 'PRODUCT_LIST_FAIL' ) in a variable which is a constant.
+
+Create /src/constants/productConstants.js
+*/
+
+//productConstants.js
+export const PRODUCT_LIST_REQUEST = 'PRODUCT_LIST_REQUEST'
+export const PRODUCT_LIST_SUCCESS = 'PRODUCT_LIST_SUCCESS'
+export const PRODUCT_LIST_FAIL = 'PRODUCT_LIST_FAIL'
+
+/*
+And we bring those constant into our productReducers.js like:
+*/
+import { PRODUCT_LIST_REQUEST, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_FAIL } from '../constants/productConstants'
+
+export const productListReducer = (state = { products: [] }, action) => {
+    switch(action.type) {
+        case PRODUCT_LIST_REQUEST:
+            return { loading: true, products: [] }
+        case PRODUCT_LIST_SUCCESS:
+            return { loading:false, products: action.payload }
+        case PRODUCT_LIST_FAIL:
+            return { loading:false, error: action.payload}
+        default:
+            return state            
+    }
+}
+
+/*
+/  (3)    action
+
+create /src/actions/productActions.js
+
+Any action that has to do with the product will go in here.
+
+We bring the constants into our action file.
+This action will do what we did in our /src/pages/Home.js : Fetching data
+
+Now, Instead of fetching data from Home.js, we gonna do that from this action and we gonna dispatch actions to the reducer. 
+
+Think the functions here in productActions.js file as action creators, and the actual action like PRODUCT_LIST_REQUEST we dispatch back to the reducer.
+
+In here, we want to make an asynchronous request.
+This is where redux thunk comes in.
+What Redux thunk allows us to do is add a function within a function.
+*   export const listProducts = () => async (dispatch) => {}
+
+*/
+
+import axios from 'axios'
+import {
+  PRODUCT_LIST_REQUEST,
+  PRODUCT_LIST_SUCCESS,
+  PRODUCT_LIST_FAIL,
+} from '../constants/productConstants'
+
+export const listProducts = () => async (dispatch) => {
+  try {
+
+    dispatch({ type: PRODUCT_LIST_REQUEST })
+
+    const { data } = await axios.get('http://localhost:5100/api/products')
+
+    dispatch({
+      type: PRODUCT_LIST_SUCCESS,
+      payload: data,
+    })
+
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_LIST_FAIL,
+
+      /*
+      Here, we want to try to get whatever the error massage is, so that we can get our custom backend errors and have them in our frontend state.
+      error.response: a generic error message 
+      error.response.data.message: our custom error message
+      */ 
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.response,
+    })
+  }
+}
