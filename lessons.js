@@ -264,3 +264,66 @@ export const listProducts = () => async (dispatch) => {
     })
   }
 }
+
+
+/*
+/  (3)   Bringing Redux State Into Home.js  - useDispatch and useSelecor
+
+Now we already setup our product 
+     a) constants in /src/constants/productConstants.js
+     b) productListReducer in /src/reducers/productReducers.js 
+        which handles the listing of products in our state,
+     c) listProducts action in /src/actions/productActions.js
+     This need to be fired off.
+
+And where we want to fire that off is gonna be in Home.jsx
+
+In /src/pages/Home.jsx
+
+What we were doing before was bringing in axios,
+making request directly from this component. We do not want to do that anymore.
+
+remove:
+*    import axios from 'axios'
+
+all the code in useEffect:
+*    const fetchProducts = async () => {
+*      const { data } = await axios.get('http://localhost:5100/api/products')
+*      setProducts(data)
+*    }
+*    fetchProducts()
+
+We do not need to set products as our local state anymore, remove:
+*    const [products, setProducts] = useState([])    
+
+To dispatch our list products action, we have to bring that in from 'react-redux'
+And we want 2 things:
+    a) useDispatch() that will be used to dispatch or call action
+    b) useSelector() to select parts of the state.
+      We gonna want the product list part of the state.
+
+We bring in the product list 
+*    import { listProducts } from '../actions/productActions'      
+
+And where we want to fire off this listProducts is in the useEffect().
+       
+*/
+import { useDispatch, useSelector } from 'react-redux' 
+import { listProducts } from '../actions/productActions' 
+
+const Home = () => {
+  const dispatch = useDispatch() 
+
+  const productList = useSelector((state) => state.productList)
+  const { loading, error, products } = productList
+
+  useEffect(() => {
+    dispatch(listProducts())
+  }, [dispatch])
+
+    return (
+      <div>
+        <p>Our jsx here</p>
+      </div>
+    )
+}
