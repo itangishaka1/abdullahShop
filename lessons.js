@@ -327,3 +327,19 @@ const Home = () => {
       </div>
     )
 }
+
+/*
+! SUmmary
+
+Any time you want to add a piece of functionality, make a new request ....
+
+(1) start with constants
+(2) reducer
+(3) Whenever we create a new reducer, we have to add it to our store.js
+(4) create an action
+(5) Now go to the component and use your action there
+
+---------------------------- 
+
+
+*/
