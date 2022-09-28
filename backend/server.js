@@ -6,6 +6,7 @@ import connectDB from './config/db.js'
 import colors from 'colors'
 
 import productRoutes from './routes/productRoutes.js'
+import userRoutes from './routes/userRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -14,6 +15,7 @@ const app = express()
 const PORT = process.env.PORT || 5200
 
 app.use(cors())
+app.use(express.json()) // to be able to accept the post request
 
 
 app.get('/', (req, res) => {
@@ -21,6 +23,7 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/products', productRoutes)
+app.use('/api/users', userRoutes)
 
 // Handle 404 error for the routes that do not exist in our App
 app.use(notFound )
