@@ -17,7 +17,7 @@ import Loader from '../components/Loader/Loader'
 import Message from '../components/Message/Message'
 
 const ProductPage = ({ history , match }) => {
-  const [qty, setQty] = useState(0)
+  const [qty, setQty] = useState(1)
   const dispatch = useDispatch()
 
   const product_details = useSelector((state) => state.productDetails) // this productDetails is from store.js
